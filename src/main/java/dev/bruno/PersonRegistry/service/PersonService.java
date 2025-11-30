@@ -3,7 +3,6 @@ package dev.bruno.PersonRegistry.service;
 import dev.bruno.PersonRegistry.model.PersonModel;
 import dev.bruno.PersonRegistry.repositorys.PersonRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -32,9 +31,14 @@ public class PersonService {
     }
 
     public PersonModel alterPerson(Long id, PersonModel personModel){
-        personRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Person not found!")
-        );
-        return personRepository.save(personModel);
+       PersonModel person = personRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Person not found!"));
+
+       PersonModel newPerson = PersonModel.builder()
+               .name(personModel.getName() != null ? personModel.getName() : person.getName())
+               .email(personModel.getEmail() != null ? personModel.getEmail() : person.getEmail())
+               .id(person.getId())
+        .build();
+        return personRepository.save(newPerson);
     }
 }
