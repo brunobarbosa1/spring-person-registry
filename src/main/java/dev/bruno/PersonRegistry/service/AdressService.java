@@ -49,11 +49,9 @@ public class AdressService {
     public UpdateAdressDTO alterAdress(Long id, UpdateAdressDTO updateAdressDTO){
         AdressModel adress = adressRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("Adress not found!"));
-        AdressModel newAdress = AdressModel.builder()
-                .adress(updateAdressDTO.adress() != null ? updateAdressDTO.adress() : adress.getAdress())
-                .number(updateAdressDTO.number() != 0 ? updateAdressDTO.number() : adress.getNumber())
-                .neighborhood(updateAdressDTO.neighborhood() != null ? updateAdressDTO.neighborhood() : adress.getNeighborhood())
-                .build();
-        return updateAdressMapper.dtoToEntity(adressRepository.save(newAdress));
+
+        updateAdressMapper.merge(adress, updateAdressDTO);
+        adress =  adressRepository.save(adress);
+        return updateAdressMapper.dtoToEntity(adress);
     }
 }

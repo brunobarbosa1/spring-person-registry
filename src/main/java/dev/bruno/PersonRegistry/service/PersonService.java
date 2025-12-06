@@ -47,38 +47,13 @@ public class PersonService {
         personRepository.deleteById(id);
     }
 
+
     public UpdatePersonDTO updatePerson(Long id, UpdatePersonDTO updatePersonDTO){
        PersonModel person = personRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("Person not found!"));
 
-       /*
-       * Necesário análise para correção
-       * */
-
-        PersonModel newPerson  = updatePersonMapper.entityToDto(updatePersonDTO);
-
-        updatePersonMapper.merge(person, updatePersonDTO);
-
-        return updatePersonMapper.dtoToEntity(personRepository.save(newPerson));
-
-//        if (updatePersonDTO.name() != null){
-//            newPerson.setName(updatePersonDTO.name());
-//        }else {
-//            newPerson.setName(person.getName());
-//        }
-//
-//        if (updatePersonDTO.adressModel() != null){
-//            newPerson.setAdress(updatePersonDTO.adressModel());
-//        }else{
-//            newPerson.setAdress(person.getAdress());
-//        }
-
-//       PersonModel newPerson = PersonModel.builder()
-//               .name(updatePersonDTO.name() != null ? updatePersonDTO.name() : person.getName())
-//               .adress(updatePersonDTO.adressModel() != null ? updatePersonDTO.adressModel() : person.getAdress())
-//               .email(person.getEmail())
-//               .id(person.getId())
-//        .build();
-
+       updatePersonMapper.merge(person, updatePersonDTO);
+       person = personRepository.save(person);
+       return updatePersonMapper.dtoToEntity(person);
     }
 }
