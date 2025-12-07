@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/adress")
+@RequestMapping("/adress")
 public class AdressController {
 
     private final AdressService adressService;
@@ -20,7 +20,7 @@ public class AdressController {
         this.adressService = adressService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<ListAdressDTO>> adressGetAll() {
         return adressService.adressGetAll().isEmpty() ?
                 ResponseEntity.noContent().build() :
@@ -28,20 +28,20 @@ public class AdressController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ListAdressDTO> adressGetById(Long id) {
+    public ResponseEntity<ListAdressDTO> adressGetById(@PathVariable Long id) {
         return adressService.adressById(id) == null ?
                 ResponseEntity.notFound().build() :
                 ResponseEntity.ok(adressService.adressById(id));
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<CreateAdressDTO> createAdress(@RequestBody CreateAdressDTO createAdressDTO) {
         adressService.createAdress(createAdressDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteAdress(@PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAdress(@PathParam("id") Long id) {
         if(adressService.adressById(id) == null) {
             return ResponseEntity.notFound().build();
         }else{

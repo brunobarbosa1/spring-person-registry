@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/person")
+@RequestMapping("/person")
 public class PersonController {
 
     private final PersonService personService;
@@ -20,7 +20,13 @@ public class PersonController {
         this.personService = personService;
     }
 
-    @GetMapping("/all")
+    @PostMapping
+    public ResponseEntity<CreatePersonDTO> createPerson(@RequestBody CreatePersonDTO newPerson) {
+        personService.createPerson(newPerson);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping
     public ResponseEntity<List<ListPersonDTO>> personGetAll() {
         return personService.personFindAll().isEmpty() ?
                 ResponseEntity.notFound().build() :
@@ -34,13 +40,7 @@ public class PersonController {
                 ResponseEntity.ok(personService.personFindById(id));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<CreatePersonDTO> createPerson(@RequestBody CreatePersonDTO newPerson) {
-        personService.createPerson(newPerson);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ResponseEntity<Void> deletePerson(@PathParam("id") Long id) {
         if(personService.personFindById(id) == null) {
             return ResponseEntity.notFound().build();
@@ -50,7 +50,7 @@ public class PersonController {
         }
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UpdatePersonDTO> updatePerson(@PathVariable Long id, @RequestBody UpdatePersonDTO updatePersonDTO) {
         return personService.personFindById(id) == null ? ResponseEntity.notFound().build() :
                 ResponseEntity.ok(personService.updatePerson(id, updatePersonDTO));
