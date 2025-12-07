@@ -14,10 +14,10 @@ public class AdressModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "adress", nullable = false, unique = true)
+    @Column(name = "adress", nullable = false)
     private String adress;
 
-    @Column(name = "number")
+    @Column(name = "number",  nullable = false)
     private short number;
 
     @Column(name = "neighborhood")
